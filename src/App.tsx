@@ -9,8 +9,15 @@ function App() {
     height: 1080,
   });
 
+  //Display Scale
+  const [scale, setScale] = useState(1);
+
   // Tiles
   const [tiles, setTiles] = useState<Tile[]>([]);
+  const tileCount = tiles.length;
+
+  // DisplayWrapper Reference
+  const displayWrapperRef = useRef<HTMLDivElement>(null);
 
   return (
     <>
