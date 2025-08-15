@@ -19,6 +19,24 @@ function App() {
   // DisplayWrapper Reference
   const displayWrapperRef = useRef<HTMLDivElement>(null);
 
+  const calcScale = () => {
+    if (!displayWrapperRef.current) return;
+    const wrapperWidth = displayWrapperRef.current.clientWidth;
+    const scale = wrapperWidth / display.width;
+
+    setScale(scale);
+  };
+
+  // display 변경시 상대 scale 계산해서 변경
+  useEffect(() => {
+    calcScale();
+
+    window.addEventListener("resize", calcScale);
+
+    return () => window.removeEventListener("resize", calcScale);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [display]);
+
   return (
     <>
       <div id="container">
