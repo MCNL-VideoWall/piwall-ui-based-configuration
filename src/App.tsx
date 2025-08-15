@@ -37,6 +37,13 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [display]);
 
+  const addTile = () => {
+    setTiles((prev) => [
+      ...prev,
+      { id: tileCount.toString(), xPx: 0, yPx: 0, widthPx: 100, heightPx: 100 },
+    ]);
+  };
+
   return (
     <>
       <div id="container">
