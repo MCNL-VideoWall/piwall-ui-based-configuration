@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Tile, Display } from "./types";
 import "./App.css";
 
@@ -56,7 +56,16 @@ function App() {
         </div>
 
         {/* DISPLAY */}
-        <div id="display"></div>
+        <div id="displayWrapper" ref={displayWrapperRef}>
+          <div
+            id="display"
+            style={{
+              position: "relative",
+              width: display.width * scale,
+              height: display.height * scale,
+            }}
+          ></div>
+        </div>
       </div>
     </>
   );
