@@ -7,6 +7,6 @@ export interface Tile {
   id: string;
   xPx: number;
   yPx: number;
-  wPx: number;
-  hPx: number;
+  widthPx: number;
+  heightPx: number;
 }
