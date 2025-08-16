@@ -172,6 +172,22 @@ function App() {
     return config.join("\n");
   };
 
+  // 파일 다운로드
+  const downloadPiwallConfig = () => {
+    const configContent = generatePiwallConfig();
+    const blob = new Blob([configContent], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "piwall.conf";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <>
       <div id="container">
