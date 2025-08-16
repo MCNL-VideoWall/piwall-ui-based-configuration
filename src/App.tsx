@@ -27,20 +27,19 @@ function App() {
 
   const calcScale = () => {
     if (!displayWrapperRef.current) return;
-    const wrapperWidth = displayWrapperRef.current.clientWidth;
-    const scale = wrapperWidth / display.width;
-
+    const wrapperWidth = displayWrapperRef.current.clientWidth - 40; // padding 고려
+    const wrapperHeight = displayWrapperRef.current.clientHeight - 40;
+    const scaleX = wrapperWidth / display.width;
+    const scaleY = wrapperHeight / display.height;
+    const scale = Math.min(scaleX, scaleY, 0.8); // 최대 80% 스케일
     setScale(scale);
   };
 
   // display 변경시 상대 scale 계산해서 변경
   useEffect(() => {
     calcScale();
-
     window.addEventListener("resize", calcScale);
-
     return () => window.removeEventListener("resize", calcScale);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [display]);
 
   // 디스플레이 크기 변경
