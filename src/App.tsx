@@ -135,6 +135,43 @@ function App() {
     );
   };
 
+  // piwall 설정 파일 생성
+  const generatePiwallConfig = () => {
+    const config = [];
+
+    // wall 섹션 추가
+    config.push("# Flexible Video Wall Configuration");
+    config.push(
+      `# 소스 비디오(Wall) 해상도: ${display.width}x${display.height} (고정)`
+    );
+    config.push(`# 물리적 디스플레이: ${tiles.length}개 모니터`);
+    config.push(
+      `# [wall] 섹션: 보여주고자 하는 원본 영상의 크기를 ${display.width}x${display.height}으로 고정`
+    );
+    config.push("");
+    config.push("[wall]");
+    config.push(`width=${display.width}`);
+    config.push(`height=${display.height}`);
+    config.push("x=0");
+    config.push("y=0");
+    config.push("");
+
+    // 각 타일에 대한 섹션 추가
+    tiles.forEach((tile, index) => {
+      const piNumber = String(index + 1).padStart(2, "0");
+      config.push(`# --- ${tile.id} ---`);
+      config.push(`[pi${piNumber}]`);
+      config.push("wall=wall");
+      config.push(`width=${tile.widthPx}`);
+      config.push(`height=${tile.heightPx}`);
+      config.push(`x=${Math.round(tile.xPx)}`);
+      config.push(`y=${Math.round(tile.yPx)}`);
+      config.push("");
+    });
+
+    return config.join("\n");
+  };
+
   return (
     <>
       <div id="container">
