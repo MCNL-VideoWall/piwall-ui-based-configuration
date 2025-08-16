@@ -15,6 +15,8 @@ function App() {
   // Tiles
   const [tiles, setTiles] = useState<Tile[]>([]);
   const tileCount = tiles.length;
+  const [draggedTile, setDraggedTile] = useState<string | null>(null);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
 
   // DisplayWrapper Reference
   const displayWrapperRef = useRef<HTMLDivElement>(null);
