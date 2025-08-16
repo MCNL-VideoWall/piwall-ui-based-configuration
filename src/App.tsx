@@ -18,6 +18,10 @@ function App() {
   const [draggedTile, setDraggedTile] = useState<string | null>(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
 
+  // 새 타일 입력값
+  const [newTileWidth, setNewTileWidth] = useState(200);
+  const [newTileHeight, setNewTileHeight] = useState(200);
+
   // DisplayWrapper Reference
   const displayWrapperRef = useRef<HTMLDivElement>(null);
 
