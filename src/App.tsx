@@ -117,6 +117,24 @@ function App() {
     setTiles(tiles.filter((t) => t.id !== tileId));
   };
 
+  // 타일 크기 변경
+  const updateTileSize = (tileId: string, width: number, height: number) => {
+    setTiles(
+      tiles.map((t) =>
+        t.id === tileId
+          ? {
+              ...t,
+              widthPx: width,
+              heightPx: height,
+              // 경계를 벗어나지 않도록 위치 조정
+              xPx: Math.min(t.xPx, display.width - width),
+              yPx: Math.min(t.yPx, display.height - height),
+            }
+          : t
+      )
+    );
+  };
+
   return (
     <>
       <div id="container">
