@@ -39,6 +39,7 @@ function App() {
     calcScale();
     window.addEventListener("resize", calcScale);
     return () => window.removeEventListener("resize", calcScale);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [display]);
 
   // 디스플레이 크기 변경
