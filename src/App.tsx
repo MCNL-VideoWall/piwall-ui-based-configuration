@@ -9,12 +9,11 @@ function App() {
     height: 1080,
   });
 
-  //Display Scale
+  // Display Scale
   const [scale, setScale] = useState(1);
 
   // Tiles
   const [tiles, setTiles] = useState<Tile[]>([]);
-  const tileCount = tiles.length;
   const [draggedTile, setDraggedTile] = useState<string | null>(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
 
@@ -194,29 +193,194 @@ function App() {
   };
 
   return (
-    <>
-      <div id="container">
-        <h1>PI Wall Generator</h1>
-        {/* DISPLAY RESOLUTION INPUTS */}
-        <div id="display-resolution">
-          <input type="number" />
-          x
-          <input type="number" />
-        </div>
+    <div className="app-container">
+      <h1 className="app-title">PI Wall Generator</h1>
 
-        {/* DISPLAY */}
-        <div id="displayWrapper" ref={displayWrapperRef}>
-          <div
-            id="display"
-            style={{
-              position: "relative",
-              width: display.width * scale,
-              height: display.height * scale,
-            }}
-          ></div>
+      {/* 디스플레이 해상도 설정 */}
+      <div className="section">
+        <h3>디스플레이 해상도</h3>
+        <div className="input-row">
+          <input
+            type="number"
+            value={display.width}
+            onChange={(e) =>
+              handleDisplaySizeChange(Number(e.target.value), display.height)
+            }
+            placeholder="Width"
+            className="input-number input-large"
+          />
+          <span>×</span>
+          <input
+            type="number"
+            value={display.height}
+            onChange={(e) =>
+              handleDisplaySizeChange(display.width, Number(e.target.value))
+            }
+            placeholder="Height"
+            className="input-number input-large"
+          />
+          <span className="info-text">
+            현재: {display.width} × {display.height} (Scale:{" "}
+            {(scale * 100).toFixed(1)}%)
+          </span>
         </div>
       </div>
-    </>
+
+      {/* 타일 추가 섹션 */}
+      <div className="section">
+        <h3>새 타일 추가</h3>
+        <div className="input-row">
+          <input
+            type="number"
+            value={newTileWidth}
+            onChange={(e) => setNewTileWidth(Number(e.target.value))}
+            placeholder="Width"
+            className="input-number input-small"
+          />
+          <span>×</span>
+          <input
+            type="number"
+            value={newTileHeight}
+            onChange={(e) => setNewTileHeight(Number(e.target.value))}
+            placeholder="Height"
+            className="input-number input-small"
+          />
+          <button onClick={addTile} className="btn btn-primary">
+            타일 추가
+          </button>
+        </div>
+      </div>
+
+      {/* 설정 다운로드 섹션 */}
+      <div className="section">
+        <h3>Piwall 설정 파일</h3>
+        <div className="input-row">
+          <button
+            onClick={downloadPiwallConfig}
+            className="btn btn-success"
+            disabled={tiles.length === 0}
+          >
+            piwall.conf 다운로드
+          </button>
+          <span className="info-text">
+            {tiles.length}개의 타일로 구성된 설정 파일
+          </span>
+        </div>
+      </div>
+
+      {/* 메인 디스플레이 영역 */}
+      <div
+        ref={displayWrapperRef}
+        className={`display-wrapper ${draggedTile ? "dragging" : ""}`}
+        style={{
+          height: `${display.height * scale + 40}px`,
+        }}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+      >
+        {/* 디스플레이 영역 */}
+        <div
+          id="display"
+          className="display"
+          style={{
+            width: display.width * scale,
+            height: display.height * scale,
+          }}
+        >
+          {/* 디스플레이 정보 라벨 */}
+          <div className="display-label">
+            Display ({display.width} × {display.height})
+          </div>
+        </div>
+
+        {/* 타일들 렌더링 */}
+        {tiles.map((tile) => (
+          <div
+            key={tile.id}
+            className={`tile ${tile.isDragging ? "tile-dragging" : ""}`}
+            style={{
+              left: tile.xPx * scale + 20,
+              top: tile.yPx * scale + 20,
+              width: tile.widthPx * scale,
+              height: tile.heightPx * scale,
+            }}
+            onMouseDown={(e) => handleMouseDown(e, tile.id)}
+          >
+            <div className="tile-content">
+              <div>{tile.id}</div>
+              <div className="tile-position">
+                ({Math.round(tile.xPx)}, {Math.round(tile.yPx)})
+              </div>
+              <div className="tile-size">
+                {tile.widthPx}×{tile.heightPx}
+              </div>
+            </div>
+            <button
+              onClick={() => removeTile(tile.id)}
+              className="tile-remove-btn"
+            >
+              ×
+            </button>
+          </div>
+        ))}
+      </div>
+
+      {/* 타일 목록 및 편집 */}
+      <div className="tile-list-section">
+        <h3>타일 목록</h3>
+        {tiles.length === 0 ? (
+          <p className="empty-message">
+            타일이 없습니다. 위에서 타일을 추가해보세요.
+          </p>
+        ) : (
+          tiles.map((tile) => (
+            <div key={tile.id} className="tile-item">
+              <div className="tile-info">
+                <strong>{tile.id}</strong>
+                <span>
+                  Position: ({Math.round(tile.xPx)}, {Math.round(tile.yPx)})
+                </span>
+                <button
+                  onClick={() => removeTile(tile.id)}
+                  className="btn btn-danger btn-small"
+                >
+                  삭제
+                </button>
+              </div>
+              <div className="tile-size-controls">
+                <span>크기:</span>
+                <input
+                  type="number"
+                  value={tile.widthPx}
+                  onChange={(e) =>
+                    updateTileSize(
+                      tile.id,
+                      Number(e.target.value),
+                      tile.heightPx
+                    )
+                  }
+                  className="input-number input-tiny"
+                />
+                <span>×</span>
+                <input
+                  type="number"
+                  value={tile.heightPx}
+                  onChange={(e) =>
+                    updateTileSize(
+                      tile.id,
+                      tile.widthPx,
+                      Number(e.target.value)
+                    )
+                  }
+                  className="input-number input-tiny"
+                />
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
   );
 }
 
