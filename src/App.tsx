@@ -100,6 +100,18 @@ function App() {
     );
   };
 
+  // 드래그 끝
+  const handleMouseUp = () => {
+    if (draggedTile) {
+      setTiles(
+        tiles.map((t) =>
+          t.id === draggedTile ? { ...t, isDragging: false } : t
+        )
+      );
+      setDraggedTile(null);
+    }
+  };
+
   return (
     <>
       <div id="container">
