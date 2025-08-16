@@ -9,4 +9,5 @@ export interface Tile {
   yPx: number;
   widthPx: number;
   heightPx: number;
+  isDragging: boolean;
 }
