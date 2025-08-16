@@ -55,6 +55,21 @@ function App() {
     setTiles([...tiles, newTile]);
   };
 
+  // 드래그 시작
+  const handleMouseDown = (e: React.MouseEvent, tileId: string) => {
+    e.preventDefault();
+    const rect = e.currentTarget.getBoundingClientRect();
+    setDragOffset({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
+
+    setDraggedTile(tileId);
+    setTiles(
+      tiles.map((t) => (t.id === tileId ? { ...t, isDragging: true } : t))
+    );
+  };
+
   return (
     <>
       <div id="container">
