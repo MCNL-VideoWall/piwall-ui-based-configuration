@@ -37,6 +37,11 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [display]);
 
+  // 디스플레이 크기 변경
+  const handleDisplaySizeChange = (width: number, height: number) => {
+    setDisplay({ width, height });
+  };
+
   const addTile = () => {
     setTiles((prev) => [
       ...prev,
