@@ -112,6 +112,11 @@ function App() {
     }
   };
 
+  // 타일 삭제
+  const removeTile = (tileId: string) => {
+    setTiles(tiles.filter((t) => t.id !== tileId));
+  };
+
   return (
     <>
       <div id="container">
