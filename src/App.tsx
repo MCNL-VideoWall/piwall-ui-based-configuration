@@ -70,6 +70,36 @@ function App() {
     );
   };
 
+  // 드래그 중
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!draggedTile) return;
+
+    const displayWrapper = displayWrapperRef.current;
+    if (!displayWrapper) return;
+
+    const wrapperRect = displayWrapper.getBoundingClientRect();
+    const x = (e.clientX - wrapperRect.left - 20 - dragOffset.x) / scale; // 20은 padding
+    const y = (e.clientY - wrapperRect.top - 20 - dragOffset.y) / scale;
+
+    // 디스플레이 경계 내에서만 이동 가능하도록 제한
+    const tile = tiles.find((t) => t.id === draggedTile);
+    if (!tile) return;
+
+    const constrainedX = Math.max(0, Math.min(display.width - tile.widthPx, x));
+    const constrainedY = Math.max(
+      0,
+      Math.min(display.height - tile.heightPx, y)
+    );
+
+    setTiles(
+      tiles.map((t) =>
+        t.id === draggedTile
+          ? { ...t, xPx: constrainedX, yPx: constrainedY }
+          : t
+      )
+    );
+  };
+
   return (
     <>
       <div id="container">
