@@ -42,11 +42,17 @@ function App() {
     setDisplay({ width, height });
   };
 
+  // 타일 추가
   const addTile = () => {
-    setTiles((prev) => [
-      ...prev,
-      { id: tileCount.toString(), xPx: 0, yPx: 0, widthPx: 100, heightPx: 100 },
-    ]);
+    const newTile: Tile = {
+      id: `tile-${tiles.length}`,
+      xPx: 0,
+      yPx: 0,
+      widthPx: newTileWidth,
+      heightPx: newTileHeight,
+      isDragging: false,
+    };
+    setTiles([...tiles, newTile]);
   };
 
   return (
